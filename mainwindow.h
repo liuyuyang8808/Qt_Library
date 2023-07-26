@@ -19,6 +19,8 @@ public:
     ~MainWindow();
 
     void InitMenu();
+    void UpdateProgressBarValue(int value);
+
 
 private slots:
     void on_openFile_triggered();

@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QWidget>
 
@@ -20,16 +21,23 @@ class Ui_UEProgressBar
 {
 public:
     QProgressBar *progressBar;
+    QLineEdit *lineEdit;
 
     void setupUi(QWidget *UEProgressBar)
     {
         if (UEProgressBar->objectName().isEmpty())
             UEProgressBar->setObjectName(QString::fromUtf8("UEProgressBar"));
-        UEProgressBar->resize(400, 300);
+        UEProgressBar->resize(400, 477);
+        UEProgressBar->setAutoFillBackground(true);
         progressBar = new QProgressBar(UEProgressBar);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
-        progressBar->setGeometry(QRect(110, 120, 118, 23));
+        progressBar->setGeometry(QRect(50, 250, 131, 31));
         progressBar->setValue(24);
+        lineEdit = new QLineEdit(UEProgressBar);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setGeometry(QRect(60, 250, 41, 20));
+        lineEdit->setMouseTracking(true);
+        lineEdit->setAutoFillBackground(true);
 
         retranslateUi(UEProgressBar);
 
@@ -39,6 +47,7 @@ public:
     void retranslateUi(QWidget *UEProgressBar)
     {
         UEProgressBar->setWindowTitle(QCoreApplication::translate("UEProgressBar", "Form", nullptr));
+        progressBar->setFormat(QString());
     } // retranslateUi
 
 };
