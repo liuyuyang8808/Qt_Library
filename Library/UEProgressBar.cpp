@@ -9,7 +9,9 @@ UEProgressBar::UEProgressBar(QWidget* parent)
 	ui->setupUi(this);
 
 	m_progress_bar = ui->progressBar;
+
 	m_line_edit = ui->lineEdit;
+
 
 	InitAll();
 }
@@ -23,20 +25,58 @@ void UEProgressBar::InitAll()
 {
 	setCursor(Qt::SizeHorCursor);
 
+	InitLineEdit();
+	InitProgressBar();
+}
+
+void UEProgressBar::InitLineEdit()
+{
+	QDoubleValidator* double_vaildator = new QDoubleValidator(m_line_edit);
+	double_vaildator->setRange(m_min_value, m_max_value, 6);
+
+	m_line_edit->setValidator(double_vaildator);
+}
+
+void UEProgressBar::InitProgressBar()
+{
 	m_progress_bar->setFormat("");
 	m_progress_bar->setMaximum(m_max_value);
 	m_progress_bar->setMinimum(m_min_value);
-
-	m_line_edit->setWindowOpacity(1);
 }
 
-void UEProgressBar::UpdateUeProgressBarValue(double val)
+void UEProgressBar::UpdateValueByLineEdit(QString val)
 {
-	m_progress_bar->setValue(val);
-	m_line_edit->setText(QString::number(val));
-	m_current_value = val;
+	int input_i = val.toInt();
+	if (input_i)
+	{
+		input_i = std::clamp(input_i, (int)m_min_value, (int)m_max_value);
+		m_line_edit->setText(QString::number(input_i, 'f', 1));
+		m_progress_bar->setValue(input_i);
+		return;
+	}
+	else
+	{
+		double input_d = val.toDouble(); 
+		if(input_d < m_min_value)
+		{
+			m_line_edit->setText(QString::number(m_min_value, 'f', 1));
+			m_progress_bar->setValue(m_min_value);
+			return;
+		}
+		else if (input_d > m_max_value)
+		{
+			m_line_edit->setText(QString::number(m_max_value, 'f', 1));
+			m_progress_bar->setValue(m_max_value);
+			return;
+		}
+		m_line_edit->setText(QString::number(input_d));
+		m_progress_bar->setValue(input_d);
+	}
+}
 
-	qDebug() << "update value";
+void UEProgressBar::UpdateValueByProgressBar(double val)
+{
+
 }
 
 //void UEProgressBar::enterEvent(QEnterEvent* event)
@@ -87,8 +127,6 @@ void UEProgressBar::mouseMoveEvent(QMouseEvent* event)
 		m_current_value -= m_frequency / 7;
 	}
 	m_last_mouse_pos_x = current_mouse_position.x();
-	m_current_value = std::clamp(m_current_value, m_min_value, m_max_value);
-	UpdateUeProgressBarValue(m_current_value);
 	
 
 	qDebug() << "mouse move";
@@ -96,10 +134,10 @@ void UEProgressBar::mouseMoveEvent(QMouseEvent* event)
 
 void UEProgressBar::keyPressEvent(QKeyEvent* event)
 {
-	if (event->key() == Qt::Key_Enter)
+	if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
 	{
-		double current_val = m_line_edit->text().toDouble();
-		UpdateUeProgressBarValue(current_val);
+		QString val = m_line_edit->text();
+		UpdateValueByLineEdit(val);
 	}
 }
 

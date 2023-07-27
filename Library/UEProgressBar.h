@@ -19,7 +19,11 @@ public:
 	~UEProgressBar();
 
 	void InitAll();
-	void UpdateUeProgressBarValue(double val);
+	void InitLineEdit();
+	void InitProgressBar ();
+
+	void UpdateValueByLineEdit(QString val);
+	void UpdateValueByProgressBar(double val);
 
 protected:
 	//void enterEvent(QEnterEvent* event) override;
@@ -38,7 +42,7 @@ private:
 	
 	double m_current_value = 10.0f;
 	double m_max_value = 360.0f;
-	double m_min_value = 0.0f;
+	double m_min_value = 1e-9;
 	double m_frequency = 8.f;
 
 	uint16_t m_last_mouse_pos_x = 0;

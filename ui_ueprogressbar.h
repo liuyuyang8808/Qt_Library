@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QWidget>
@@ -22,6 +23,7 @@ class Ui_UEProgressBar
 public:
     QProgressBar *progressBar;
     QLineEdit *lineEdit;
+    QDoubleSpinBox *doubleSpinBox;
 
     void setupUi(QWidget *UEProgressBar)
     {
@@ -31,13 +33,16 @@ public:
         UEProgressBar->setAutoFillBackground(true);
         progressBar = new QProgressBar(UEProgressBar);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
-        progressBar->setGeometry(QRect(50, 250, 131, 31));
+        progressBar->setGeometry(QRect(50, 250, 251, 31));
         progressBar->setValue(24);
         lineEdit = new QLineEdit(UEProgressBar);
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setGeometry(QRect(60, 250, 41, 20));
+        lineEdit->setGeometry(QRect(60, 250, 131, 20));
         lineEdit->setMouseTracking(true);
         lineEdit->setAutoFillBackground(true);
+        doubleSpinBox = new QDoubleSpinBox(UEProgressBar);
+        doubleSpinBox->setObjectName(QString::fromUtf8("doubleSpinBox"));
+        doubleSpinBox->setGeometry(QRect(210, 250, 62, 22));
 
         retranslateUi(UEProgressBar);
 
