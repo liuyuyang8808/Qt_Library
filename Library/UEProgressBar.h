@@ -21,9 +21,10 @@ public:
 	void InitAll();
 	void InitLineEdit();
 	void InitProgressBar ();
+	void RefreshMousePos();
 
-	void UpdateValueByLineEdit(QString val);
-	void UpdateValueByProgressBar(double val);
+	QString CheckValue(QString val);
+	void UpdateValue(QString val);
 
 protected:
 	//void enterEvent(QEnterEvent* event) override;
@@ -43,10 +44,10 @@ private:
 	double m_current_value = 10.0f;
 	double m_max_value = 360.0f;
 	double m_min_value = 1e-9;
-	double m_frequency = 8.f;
+	double m_frequency = 100.f;
 
-	uint16_t m_last_mouse_pos_x = 0;
-	POINT    m_last_mouse_pos;
+	int      m_start_mouse_pos_x = 0;
+	POINT    m_start_mouse_pos;
 
 	QLineEdit*		m_line_edit = nullptr;
 	QProgressBar*   m_progress_bar = nullptr;

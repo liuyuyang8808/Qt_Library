@@ -19,7 +19,6 @@ public:
     ~MainWindow();
 
     void InitMenu();
-    void UpdateProgressBarValue(int value);
 
 
 private slots:
