@@ -18,15 +18,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void InitMenu();
-
-
-private slots:
-    void on_openFile_triggered();
-    void on_saveFile_triggered();
-
 private:
     Ui::MainWindow *ui;
-    QTextEdit* m_textEdit;
 };
 #endif // MAINWINDOW_H

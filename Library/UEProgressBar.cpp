@@ -24,6 +24,7 @@ UEProgressBar::~UEProgressBar()
 void UEProgressBar::InitAll()
 {
 	setCursor(Qt::SizeHorCursor);
+	setMouseTracking(false);
 
 	InitLineEdit();
 	InitProgressBar();
@@ -32,7 +33,7 @@ void UEProgressBar::InitAll()
 void UEProgressBar::InitLineEdit()
 {
 	QDoubleValidator* double_vaildator = new QDoubleValidator(m_line_edit);
-	double_vaildator->setRange(m_min_value, m_max_value, 1);
+	double_vaildator->setRange(m_min_value, m_max_value, 5);
 
 	m_line_edit->setValidator(double_vaildator);
 	m_line_edit->setText(QString::number(m_current_value, 'f', 1));
@@ -44,9 +45,8 @@ void UEProgressBar::InitProgressBar()
 	m_progress_bar->setMaximum(m_max_value);
 	m_progress_bar->setMinimum(m_min_value);
 	m_progress_bar->setValue(m_current_value);
+	m_progress_bar->setToolTip(m_tips_text);
 }
-
-
 
 QString UEProgressBar::CheckValue(QString val)
 {
@@ -72,8 +72,6 @@ QString UEProgressBar::CheckValue(QString val)
 	return QString::number(input_d);
 }
 
-
-
 void UEProgressBar::UpdateValue(QString val)
 {
 	QString check_val = CheckValue(val);
@@ -83,21 +81,36 @@ void UEProgressBar::UpdateValue(QString val)
 	m_current_value = check_val.toDouble();
 }
 
+void UEProgressBar::SelectAllText()
+{
+	m_line_edit->selectAll();
+}
+
 void UEProgressBar::RefreshMousePos()
 {
 	SetCursorPos(m_start_mouse_pos.x, m_start_mouse_pos.y);
 }
 
-//void UEProgressBar::enterEvent(QEnterEvent* event)
-//{
-//	qDebug() << "enter event";
-//	return;
-//}
-//
-//void UEProgressBar::leaveEvent(QEvent* event)
-//{
-//	qDebug() << "leave event";
-//}
+void UEProgressBar::ShowTipsText()
+{
+	// 根据鼠标的位置来显示一个文本信息，每次移动都会更新
+
+	return;
+}
+
+void UEProgressBar::enterEvent(QEnterEvent* event)
+{
+	m_is_mouse_enter = true;
+
+	qDebug() << "enter event";
+}
+
+void UEProgressBar::leaveEvent(QEvent* event)
+{
+	m_is_mouse_move = false;
+
+	qDebug() << "leave event";
+}
 
 void UEProgressBar::mousePressEvent(QMouseEvent* event)
 {
@@ -114,13 +127,15 @@ void UEProgressBar::mousePressEvent(QMouseEvent* event)
 void UEProgressBar::mouseReleaseEvent(QMouseEvent* event)
 {
 	setCursor(Qt::SizeHorCursor);
-
-	m_is_mouse_move = false;
 	this->setMouseTracking(false);
 
-
 	SetCursorPos(m_start_mouse_pos.x, m_start_mouse_pos.y);
+	if (!m_is_mouse_move)
+	{
+		SelectAllText();
+	}
 
+	m_is_mouse_move = false;
 	qDebug() << "mouse release";
 }
 
@@ -134,8 +149,21 @@ void UEProgressBar::mouseMoveEvent(QMouseEvent* event)
 	m_current_value = delta_val / m_frequency + m_current_value;
 	UpdateValue(QString::number(m_current_value));
 	RefreshMousePos();
+	
 
 	qDebug() << "mouse move";
+}
+
+void UEProgressBar::wheelEvent(QWheelEvent* event)
+{
+	if (!m_is_mouse_enter)
+	{
+		return;
+	}
+	
+	int direction = event->angleDelta().y() > 0 ? 1: -1;	
+	m_current_value += m_frequency_wheel * direction;
+	UpdateValue(QString::number(m_current_value));
 }
 
 void UEProgressBar::keyPressEvent(QKeyEvent* event)
